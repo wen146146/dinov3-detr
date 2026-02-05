@@ -18,8 +18,8 @@ class FrozenDINOv3(nn.Module):
     def forward(self, x):
         with torch.no_grad():
             outputs = self.model(x)#给模型的数据
-            features = outputs.last_hidden_state[:, 5:, :]  # 去掉[CLS] token
-            batch_size = x.shape[0]
-            feature_map = features.permute(0, 2, 1).view(batch_size, self.feature_dim, 14, 14)
+            features = outputs.last_hidden_state[:, 5:, :]  # 去掉[CLS] token，前五个不是图片信息
+            batch_size = x.shape[0] #张数
+            feature_map = features.permute(0, 2, 1).view(batch_size, self.feature_dim, 14, 14)#调换维度后通过模型算出结果
             return feature_map
     #可以正常返回特征矩阵  输入 torch.Size([1, 3, 224, 224]) -> 输出 torch.Size([1, 768, 14, 14])
